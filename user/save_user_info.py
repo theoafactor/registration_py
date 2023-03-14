@@ -6,18 +6,20 @@ def saveUserInfo(user_info):
     import os ## <--- What does this module do?
 
     if os.path.isdir("storage") and os.path.isfile("storage/users.py"):
-        print("You may continue")
-        commitUserData(user_info)
+        #print("You may continue")
+        feedback = commitUserData(user_info)
+        return feedback
     else:
         if not os.path.isdir("storage"):
-            print("the storage does not exist ... creating it ...")
+            print("the storage folder does not exist ... creating it ...")
             os.mkdir("storage")
         if not os.path.isfile("storage/users.py"):
-            print("the file does not exist... creating it ...")
+            print("the file: user.py does not exist... creating it ...")
             f_object = open("storage/users.py", "w")
             f_object.close()
         
-        commitUserData(user_info)
+        feedback = commitUserData(user_info)
+        return feedback
 
 
 def getStorage():
@@ -32,7 +34,7 @@ def getStorage():
     return data
 
 
-
+## This function commits(saves) the user data to file
 def commitUserData(user_info):
     #print("Save: " + str(user_info))
 
@@ -40,16 +42,48 @@ def commitUserData(user_info):
     current_storage = getStorage()
 
     if len(current_storage) == 0:
+        # this is the first data to be added
         current_storage.append(user_info)
         f_object = open("storage/users.py", "a")
         f_object.write("users="+str(current_storage))
-    else:
-        from storage import users
-        users.users.append(user_info)
-        f_object = open("storage/users.py", "w")
-        f_object.write("users="+str(users.users))
 
-    print("User saved successfully!")
+        print("User saved successfully!")
+
+        return "saved"
+    else:
+        # this is not the first data to be added
+        from storage import users
+
+        # check if the user exists already
+        result = checkIfUserExists(user_info["email"])
+
+        if result == True:
+            return "duplicate-error"
+        else:
+            users.users.append(user_info)
+            f_object = open("storage/users.py", "w")
+            f_object.write("users="+str(users.users))
+            print("User saved successfully!")
+            
+            return "saved"
+
+
+def checkIfUserExists(email):
+    # retrieve the current users from storage
+    current_storage = getStorage()
+
+    if len(current_storage) == 0:
+        # current storage is empty
+        return False
+    else:
+        # current storage is not empty
+        for user in current_storage:
+            if user["email"] == email:
+                # the user exists
+                return True
+        else:
+            return False
+
 
 
 

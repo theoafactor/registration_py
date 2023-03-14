@@ -1,1 +1,1 @@
-users=[{'firstname': 'James', 'lastname': 'John', 'email': 'james@email.com'}]
+users=[{'firstname': 'James', 'lastname': 'John', 'email': 'james@email.com'}, {'firstname': 'Mary', 'lastname': 'Joseph', 'email': 'mary@email.com'}]

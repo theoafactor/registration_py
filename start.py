@@ -6,4 +6,13 @@ user_info = info_collector.collectUserInfo()
 
 ## save the user_info returned dictionary 
 ## save by calling the save_info module
-save_user_info.saveUserInfo(user_info)
+result = save_user_info.saveUserInfo(user_info)
+
+while result == "duplicate-error":
+    print("This email has been used already...")
+    print("Please try again!")
+    user_info = info_collector.collectUserInfo()
+    result = save_user_info.saveUserInfo(user_info)
+
+    if result == "saved":
+        break
